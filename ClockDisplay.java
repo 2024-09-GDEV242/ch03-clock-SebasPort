@@ -76,11 +76,20 @@ public class ClockDisplay
     }
     
     /**
-     * Update the internal string that represents the display.
+     * Update the internal string that represents the display. Also added an if-else statement that pretty much tells the "meridian"
+     * which in this case would tell the use if it is am or pm based on what time it is.
      */
     private void updateDisplay()
     {
+        int hour = hours.getValue();
+        String meridian;
+        if (hour >=12){
+            meridian = "pm";
+        }
+        else {
+            meridian = "am";
+        }
         displayString = hours.getDisplayValue() + ":" + 
-                        minutes.getDisplayValue();
+                        minutes.getDisplayValue() + meridian;
     }
 }
