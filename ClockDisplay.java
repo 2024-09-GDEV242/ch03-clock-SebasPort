@@ -6,7 +6,7 @@
  * American-style 12 hour clock. The clock shows hours and minutes.
  * The internal range of the clock is 00:00 (midnight) to 11:59
  * In order to track AM or Pm, we will need additional Fields and logic
- * to handle the switch in meridian.
+ * to handle the switch in meridian.(for my case I did not use fields, I used
  * 
  * The clock display receives "ticks" (via the timeTick method) every minute
  * and reacts by incrementing the display. This is done in the usual clock
@@ -78,11 +78,29 @@ public class ClockDisplay
     }
     
     /**
-     * Update the internal string that represents the display.
+     * Update the internal string that represents the display. So over here I also added if else statements with a string variable
+     * that determines whether to use am or pm. I've also made an if statement where if it reaches 12, then the next number/hour
+     * that should be 13 be 1, this by "reversing" the clock or decrementing the value of 12 back to 1. The last if statement
+     * states that if the clock hits midnight 00(in military time), it should turn into a 12. 
      */
     private void updateDisplay()
     {
-        displayString = hours.getDisplayValue() + ":" + 
-                        minutes.getDisplayValue();
+        int hour = hours.getValue();
+        String meridian;
+        if (hour >= 12 ){
+            meridian = "pm";
+        }
+        else {
+            meridian = "am";
+        }
+        if(hour >= 12){
+            hour -= 12;
+        }
+        if(hour == 0 ){
+            hour = 12;
+        }
+        
+        displayString = hour + ":" + 
+                        minutes.getDisplayValue()+ meridian;
     }
 }
