@@ -7,7 +7,7 @@
  * The internal range of the clock is 00:00 (midnight) to 11:59
  * In order to track AM or Pm, we will need additional Fields and logic
  * to handle the switch in meridian.(for my case I did not use fields, I used
- * 
+ * if-else statements in the Update display method as well as local variables
  * The clock display receives "ticks" (via the timeTick method) every minute
  * and reacts by incrementing the display. This is done in the usual clock
  * fashion: the hour increments when the minutes roll over to zero.
