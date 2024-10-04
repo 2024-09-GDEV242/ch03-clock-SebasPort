@@ -7,7 +7,8 @@
  * The internal range of the clock is 00:00 (midnight) to 11:59
  * In order to track AM or Pm, we will need additional Fields and logic
  * to handle the switch in meridian.(for my case I did not use fields, I used
- * if-else statements in the Update display method as well as local variables
+ * if-else statements in the Update display method as well as changing the codes 
+ * in setTime and timeTick method.
  * The clock display receives "ticks" (via the timeTick method) every minute
  * and reacts by incrementing the display. This is done in the usual clock
  * fashion: the hour increments when the minutes roll over to zero.
@@ -20,8 +21,8 @@ public class ClockDisplay
 {
     private NumberDisplay hours;
     private NumberDisplay minutes;
-    private String displayString;    // simulates the actual display
-    
+    private String displayString; // simulates the actual display
+    private boolean isAM ;//defines if it is am or pm
     /**
      * Constructor for ClockDisplay objects. This constructor 
      * creates a new clock set at 00:00.
@@ -43,6 +44,7 @@ public class ClockDisplay
         hours = new NumberDisplay(24);
         minutes = new NumberDisplay(60);
         setTime(hour, minute);
+        isAM = (hour <12);
     }
 
     /**
@@ -54,6 +56,19 @@ public class ClockDisplay
         minutes.increment();
         if(minutes.getValue() == 0) {  // it just rolled over!
             hours.increment();
+            //this determines whether it is am or pm
+            if (hours.getValue() == 12){
+                 isAM= !isAM;
+         
+            }
+            //This rolls the value over back to 1 if it hits 13....
+            if (hours.getValue() > 12){
+                hours.setValue(hours.getValue() -12);
+            } else if (hours.getValue() == 0) {
+                hours.setValue(12);
+                //this makes 0 (midnight) turn into 12
+            }
+            
         }
         updateDisplay();
     }
@@ -64,8 +79,16 @@ public class ClockDisplay
      */
     public void setTime(int hour, int minute)
     {
-        hours.setValue(hour);
+        hours.setValue(hour > 12 ? hour - 12 : hour);
         minutes.setValue(minute);
+        
+        //this turns it into a twelve hour internal clock
+        if (hour == 12){
+            isAM = false;    
+        }
+        else {
+            isAM =(hour <12);
+        }
         updateDisplay();
     }
 
@@ -86,21 +109,18 @@ public class ClockDisplay
     private void updateDisplay()
     {
         int hour = hours.getValue();
-        String meridian;
-        if (hour >= 12 ){
-            meridian = "pm";
-        }
-        else {
-            meridian = "am";
-        }
-        if(hour >= 12){
-            hour -= 12;
-        }
-        if(hour == 0 ){
+        String meridian = isAM ? "am" : "pm";
+        //determines if it is am or pm based on the isAM boolean
+        // this below converts 0 into 12 for midnight
+        if (hour == 0 || hour == 12){
             hour = 12;
         }
+        //displays the time 
+        displayString = hours.getDisplayValue() + ":" + 
+        minutes.getDisplayValue() + meridian;
         
-        displayString = hour + ":" + 
-                        minutes.getDisplayValue()+ meridian;
+        
+        
+                        
     }
 }
