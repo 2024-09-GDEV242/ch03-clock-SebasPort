@@ -29,7 +29,7 @@ public class ClockDisplay
      */
     public ClockDisplay()
     {
-        hours = new NumberDisplay(24);
+        hours = new NumberDisplay(12);
         minutes = new NumberDisplay(60);
         updateDisplay();
     }
@@ -39,12 +39,13 @@ public class ClockDisplay
      * creates a new clock set at the time specified by the 
      * parameters.
      */
-    public ClockDisplay(int hour, int minute)
+    public ClockDisplay(int hour, int minute, boolean isAM)
     {
-        hours = new NumberDisplay(24);
+        hours = new NumberDisplay(12);
         minutes = new NumberDisplay(60);
-        setTime(hour, minute);
-        isAM = (hour <12);
+        this.isAM = isAM;
+        setTime(hour, minute, isAM);
+        
     }
 
     /**
@@ -57,17 +58,12 @@ public class ClockDisplay
         if(minutes.getValue() == 0) {  // it just rolled over!
             hours.increment();
             //this determines whether it is am or pm
-            if (hours.getValue() == 12){
+            if (hours.getValue() == 0){
                  isAM= !isAM;
          
             }
-            //This rolls the value over back to 1 if it hits 13....
-            if (hours.getValue() > 12){
-                hours.setValue(hours.getValue() -12);
-            } else if (hours.getValue() == 0) {
-                hours.setValue(12);
-                //this makes 0 (midnight) turn into 12
-            }
+            
+           
             
         }
         updateDisplay();
@@ -77,18 +73,11 @@ public class ClockDisplay
      * Set the time of the display to the specified hour and
      * minute.
      */
-    public void setTime(int hour, int minute)
+    public void setTime(int hour, int minute, boolean isAM)
     {
-        hours.setValue(hour > 12 ? hour - 12 : hour);
+        hours.setValue(hour);
         minutes.setValue(minute);
-        
-        //this turns it into a twelve hour internal clock
-        if (hour == 12){
-            isAM = false;    
-        }
-        else {
-            isAM =(hour <12);
-        }
+        this.isAM = isAM;
         updateDisplay();
     }
 
@@ -112,12 +101,11 @@ public class ClockDisplay
         String meridian = isAM ? "am" : "pm";
         //determines if it is am or pm based on the isAM boolean
         // this below converts 0 into 12 for midnight
-        if (hour == 0 || hour == 12){
+        if (hour == 0){
             hour = 12;
         }
         //displays the time 
-        displayString = hours.getDisplayValue() + ":" + 
-        minutes.getDisplayValue() + meridian;
+        displayString = hour + ":" + minutes.getDisplayValue() + meridian;
         
         
         

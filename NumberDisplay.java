@@ -57,6 +57,9 @@ public class NumberDisplay
         if((replacementValue >= 0) && (replacementValue < limit)) {
             value = replacementValue;
         }
+        else{
+            System.out.println("Replacement Value outside on bounds");
+        }
     }
 
     /**
